@@ -294,45 +294,55 @@ local plugins = {
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
     build = ':TSUpdate',
     config = function()
-      require'nvim-treesitter.configs'.setup {
-        -- A list of parser names, or "all" (the five listed parsers should always be installed)
-        ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', "yaml", "json" },
+      require('nvim-treesitter').setup {}
 
-        -- Install parsers synchronously (only applied to `ensure_installed`)
-        sync_install = false,
+      -- Install parsers (async, no-op if already installed)
+      require('nvim-treesitter').install { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'yaml', 'json' }
 
-        -- Automatically install missing parsers when entering buffer
-        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-        auto_install = true,
+      -- Enable treesitter highlighting for all supported filetypes
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
 
-        highlight = {
-          enable = true,
-          --enable = false,
-
-          -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-          -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-          -- Using this option may slow down your editor, and you may see some duplicate highlights.
-          -- Instead of true it can also be a list of languages
-          additional_vim_regex_highlighting = false,
-        },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<CR>",
-            node_incremental = "<CR>",
-            scope_incremental = "<Tab>",
-            node_decremental = "<S-Tab>",
-          },
-          is_supported = function()
-            local ct = vim.fn.getcmdwintype()
-            if ct ~= "" then return false end
-            return true
-          end,
-        },
-        prefer_git = true,
-      }
+      -- Incremental selection via treesitter node expansion
+      local sel_node = nil
+      vim.keymap.set('n', '<CR>', function()
+        if vim.fn.getcmdwintype() ~= "" then return end
+        sel_node = vim.treesitter.get_node()
+        if not sel_node then return end
+        local sr, sc, er, ec = sel_node:range()
+        vim.api.nvim_buf_set_mark(0, '<', sr + 1, sc, {})
+        vim.api.nvim_buf_set_mark(0, '>', er + 1, ec - 1, {})
+        vim.cmd('normal! gv')
+      end, { desc = 'Treesitter init selection' })
+      vim.keymap.set('v', '<CR>', function()
+        if sel_node then
+          sel_node = sel_node:parent() or sel_node
+        else
+          sel_node = vim.treesitter.get_node()
+        end
+        if not sel_node then return end
+        local sr, sc, er, ec = sel_node:range()
+        vim.api.nvim_buf_set_mark(0, '<', sr + 1, sc, {})
+        vim.api.nvim_buf_set_mark(0, '>', er + 1, ec - 1, {})
+        vim.cmd('normal! gv')
+      end, { desc = 'Treesitter increment selection' })
+      vim.keymap.set('v', '<S-Tab>', function()
+        if sel_node then
+          local child = sel_node:child(0)
+          if child then sel_node = child end
+        end
+        if not sel_node then return end
+        local sr, sc, er, ec = sel_node:range()
+        vim.api.nvim_buf_set_mark(0, '<', sr + 1, sc, {})
+        vim.api.nvim_buf_set_mark(0, '>', er + 1, ec - 1, {})
+        vim.cmd('normal! gv')
+      end, { desc = 'Treesitter decrement selection' })
     end,
   },
 
