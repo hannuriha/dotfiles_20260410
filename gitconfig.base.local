@@ -1,0 +1,18 @@
+
+[alias]
+	br = branch -avv
+	ci = commit -v
+	co = checkout
+	d = difftool
+	last = log -1 HEAD
+	#lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)%Creset' --abbrev-commit
+	#lg = log --graph --date=short --abbrev-commit --all --format=format:'%C(bold red)%h %C(reset)%C(green)%ad %C(bold green)%cd %C(bold yellow)%d%Creset %s %C(bold blue)[%an]%C(reset)'
+	lg = log --graph --date=short --abbrev-commit --all --format=format:'%C(bold red)%h %C(bold green)%cd %ad %C(bold yellow)%d%Creset %s %C(bold blue)[%an] %C(reverse)%p%C(reset)'
+	#lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	lg2 = log --graph --date=iso --all --stat --pretty=fuller
+	mt = mergetool
+	st = status
+	stash-unapply = !git stash show -p | git apply -R
+	unstage = reset HEAD --
+	visual = !gitk
+	dfw = diff --word-diff=plain

@@ -2,7 +2,7 @@
 
 {
   home.username = "irteam";
-  home.homeDirectory = "/home1/irteam/work/jihoonc";
+  home.homeDirectory = "/home1/irteam/work/godinus";
 
   # Packages only for office
   home.packages = [

@@ -1,0 +1,21 @@
+#-------------------------------------------------------------------------------
+# ENVIRONMENT VARIABLES
+#-------------------------------------------------------------------------------
+export PATH=$HOME/.dotfiles/base/bin:$PATH
+
+#-------------------------------------------------------------------------------
+# ALIASES
+#-------------------------------------------------------------------------------
+alias ps='ps kstart_time'
+alias rm='rm -v'
+alias cp='cp -v'
+alias mv='mv -v'
+alias ll='ls -al'
+alias l='ls -al'
+
+alias trimspace="sed 's/ \\+/ /g;s/^ \\| \$//g'"
+alias rmvspace="tr -d ' '"
+
+alias git_grep='git branch | tr -d \* | xargs git grep'
+
+alias gd='ssh dev-godinus.ncl'

@@ -13,7 +13,7 @@
 	default = current
 
 [credential "https://github.com"]
-	username = difro
+	username = hannuriha
 
 [color]
 	diff = true
@@ -65,8 +65,8 @@
 	process = git-lfs filter-process
 
 [user]
-	name = Jihoon Chung
-	email = jihoon@gmail.com
+	name = Hannuri Ha
+	email = godinus@naver.com
 
 [branch]
 	autosetuprebase = always
@@ -128,5 +128,6 @@
 	sslVerify = false
 
 [include]
+	path = ~/.gitconfig.base.local
 	path = ~/.gitconfig.local
 	path = ~/.gitconfig.themes
